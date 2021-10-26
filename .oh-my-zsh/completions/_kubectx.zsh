@@ -1,1 +1,1 @@
-./completion/kubectx.zsh
+completion/kubectx.zsh

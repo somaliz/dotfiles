@@ -1,1 +1,1 @@
-./completion/kubens.zsh
+completion/kubens.zsh
