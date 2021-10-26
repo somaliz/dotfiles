@@ -37,5 +37,5 @@ export PATH=$PATH:/home/suleiman/go/bin
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
-
-
+alias grecom='git reset --soft'
+alias gdiff='git diff --staged'
