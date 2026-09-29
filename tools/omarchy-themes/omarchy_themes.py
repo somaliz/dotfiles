@@ -15,8 +15,8 @@ import glob, json, os, re, sys, tomllib
 HERE = os.path.dirname(os.path.abspath(__file__))
 HOME_SRC = os.path.normpath(os.path.join(HERE, "..", "..", "home"))
 OUT = {
-    "wezterm": os.path.join(HOME_SRC, "dot_config", "wezterm", "colors"),
-    "ghostty": os.path.join(HOME_SRC, "dot_config", "ghostty", "themes"),
+    "wezterm": os.path.join(HOME_SRC, "private_dot_config", "wezterm", "colors"),
+    "ghostty": os.path.join(HOME_SRC, "private_dot_config", "ghostty", "themes"),
     "claude": os.path.join(HOME_SRC, "dot_claude", "themes"),
 }
 
