@@ -58,8 +58,8 @@ description = "open file viewer in tab"
 [[keys.command]]
 key = "prefix+shift+c"
 type = "plugin_action"
-command = "persiyanov.reviewr.open"
-description = "open code review pane"
+command = "persiyanov.reviewr.toggle"
+description = "toggle code review pane"
 
 [ui]
 # Blocked agents first: the sidebar becomes an attention queue.
