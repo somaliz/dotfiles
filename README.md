@@ -34,6 +34,7 @@ Already have chezmoi? `chezmoi init somaliz && chezmoi diff && chezmoi apply`.
 | WezTerm `~/.wezterm.lua` + `~/.config/wezterm/colors` | ✓ | ✓ | | ✓ |
 | Ghostty `~/.config/ghostty` | ✓ | ✓ | | |
 | Claude Code themes + statusLine | ✓ | ✓ | ✓ | |
+| Claude Code herdr skill (from `herdr --skill`, refreshed when herdr updates) | ✓ | ✓ | ✓ | |
 | Shell PATH/aliases `~/.config/shell/common.sh` | ✓ | ✓ | ✓ | |
 | `dots-theme` in `~/.local/bin` | ✓ | ✓ | ✓ | |
 | `.wslconfig` | | | | ✓ |
