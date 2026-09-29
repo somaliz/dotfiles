@@ -1,0 +1,75 @@
+-- WezTerm: the window around herdr. herdr owns tabs, panes and agent sessions.
+-- Managed by chezmoi (edit with `chezmoi edit ~/.wezterm.lua`). WezTerm reloads on save.
+
+local wezterm = require 'wezterm'
+local config = wezterm.config_builder()
+
+-- Theme: Omarchy schemes in ~/.config/wezterm/colors (generated, see tools/omarchy-themes).
+-- The active one is a single line in ~/.config/wezterm/theme, written by `dots-theme <name>`,
+-- so switching themes never edits this managed file.
+config.color_scheme_dirs = { wezterm.home_dir .. '/.config/wezterm/colors' }
+local function active_theme()
+  local f = io.open(wezterm.home_dir .. '/.config/wezterm/theme', 'r')
+  if f then
+    local name = f:read('*l')
+    f:close()
+    if name and #name > 0 then return name end
+  end
+  return 'Omarchy Dracula'
+end
+config.color_scheme = active_theme()
+
+-- JetBrains Mono (bundled with WezTerm) plus Nerd Font symbols for herdr plugin icons.
+config.font = wezterm.font_with_fallback { 'JetBrains Mono', 'Symbols Nerd Font Mono' }
+{{- if eq .chezmoi.os "darwin" }}
+config.font_size = 13.0
+{{- else }}
+config.font_size = 11.0
+{{- end }}
+config.default_cursor_style = 'SteadyBlock'
+
+-- Open straight into herdr; fall back to a login shell if herdr is not installed yet.
+-- Closing the window is safe: the herdr server keeps every session running.
+{{- if eq .chezmoi.os "windows" }}
+config.wsl_domains = {
+  {
+    name = 'WSL:{{ .wslDistro }}',
+    distribution = '{{ .wslDistro }}',
+    default_prog = { 'bash', '-lc', 'cd ~/git 2>/dev/null || cd ~; command -v herdr >/dev/null && exec herdr || exec bash -l' },
+  },
+}
+config.default_domain = 'WSL:{{ .wslDistro }}'
+
+-- Launcher (right-click the + in the tab bar, or ctrl+shift+p): a shell without herdr, and PowerShell.
+config.launch_menu = {
+  { label = 'WSL shell (no herdr)', domain = { DomainName = 'WSL:{{ .wslDistro }}' }, args = { 'bash', '-l' } },
+  { label = 'PowerShell', domain = { DomainName = 'local' }, args = { 'powershell.exe', '-NoLogo' } },
+}
+{{- else }}
+local shell = os.getenv('SHELL') or '/bin/bash'
+config.default_prog = { shell, '-lc', 'command -v herdr >/dev/null && exec herdr || exec "$SHELL" -l' }
+config.launch_menu = {
+  { label = 'Shell (no herdr)', args = { shell, '-l' } },
+}
+{{- end }}
+
+-- herdr draws its own tab bar.
+config.hide_tab_bar_if_only_one_tab = true
+config.use_fancy_tab_bar = false
+config.tab_bar_at_bottom = true
+config.window_close_confirmation = 'NeverPrompt'
+
+-- Omarchy look: no title bar, square edges, 14px padding, nearly opaque, opened maximized.
+config.window_decorations = 'RESIZE'
+config.window_padding = { left = 14, right = 14, top = 14, bottom = 14 }
+config.window_background_opacity = 0.97
+wezterm.on('gui-startup', function(cmd)
+  local _, _, window = wezterm.mux.spawn_window(cmd or {})
+  window:gui_window():maximize()
+end)
+
+-- herdr asks the terminal for a desktop notification when an agent is blocked or done.
+config.notification_handling = 'SuppressFromFocusedWindow'
+config.audible_bell = 'Disabled'
+
+return config

@@ -1,0 +1,15 @@
+{{- if ne .chezmoi.os "windows" -}}
+#!/usr/bin/env bash
+# Claude Code skill for driving herdr (panes, agents, worktrees) from inside a herdr pane.
+# Generated from the installed binary so it always matches its version; this script reruns
+# whenever the version below changes (chezmoi run_onchange).
+# herdr version: {{ if lookPath "herdr" }}{{ output "herdr" "--version" | trim }}{{ else }}not on PATH at apply time{{ end }}
+set -euo pipefail
+export PATH="$HOME/.local/bin:$PATH"
+command -v herdr >/dev/null || { echo "herdr not installed, skipping its Claude skill"; exit 0; }
+mkdir -p "$HOME/.claude/skills/herdr"
+herdr --skill > "$HOME/.claude/skills/herdr/SKILL.md.tmp"
+grep -q '^name: herdr$' "$HOME/.claude/skills/herdr/SKILL.md.tmp" || { echo "herdr --skill output unexpected, keeping the old skill" >&2; rm -f "$HOME/.claude/skills/herdr/SKILL.md.tmp"; exit 0; }
+mv "$HOME/.claude/skills/herdr/SKILL.md.tmp" "$HOME/.claude/skills/herdr/SKILL.md"
+echo "claude skill: herdr $(herdr --version | awk '{print $2}')"
+{{- end }}

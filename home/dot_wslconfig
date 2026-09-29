@@ -1,0 +1,12 @@
+# WSL2 global settings (Windows only). Keys: https://learn.microsoft.com/en-us/windows/wsl/wsl-config
+# Applies after: wsl --shutdown (stops every WSL session).
+# Sized for a 16 GB laptop running several Claude Code sessions. Adjust memory to about half your RAM.
+[wsl2]
+memory=8GB
+# Disk-backed swap: idle agent sessions page out instead of the OOM killer firing.
+# The swap file lives on C: and grows on use, so keep some free space there.
+swap=8GB
+
+[experimental]
+# Give freed disk space back to Windows automatically.
+sparseVhd=true

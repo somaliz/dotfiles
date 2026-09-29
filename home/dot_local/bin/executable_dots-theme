@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# dots-theme: switch the Omarchy colour scheme everywhere at once.
+#   WezTerm  -> ~/.config/wezterm/theme (on WSL: the Windows home), then reloads
+#   Ghostty  -> ~/.config/ghostty/theme.conf (reload Ghostty's config to see it)
+#   herdr    -> nothing to do: it follows the terminal palette (theme.name = "terminal")
+#   Claude   -> "theme" in ~/.claude/settings.json (new sessions, or /theme in a running one)
+# Usage: dots-theme            list themes, current one starred
+#        dots-theme dracula    switch
+set -euo pipefail
+
+if grep -qi microsoft /proc/sys/kernel/osrelease 2>/dev/null; then
+  wez_home=$(wslpath "$(cmd.exe /c 'echo %USERPROFILE%' 2>/dev/null | tr -d '\r')")
+else
+  wez_home=$HOME
+fi
+claude_themes=$HOME/.claude/themes
+current=$(cat "$wez_home/.config/wezterm/theme" 2>/dev/null || echo 'Omarchy Dracula')
+
+if [[ $# -eq 0 ]]; then
+  for f in "$claude_themes"/omarchy-*.json; do
+    slug=${f##*/omarchy-}; slug=${slug%.json}
+    name=$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["name"])' "$f")
+    [[ $name == "$current" ]] && echo "* $slug" || echo "  $slug"
+  done
+  exit 0
+fi
+
+slug=$1
+f="$claude_themes/omarchy-$slug.json"
+[[ -f $f ]] || { echo "no theme '$slug' (run dots-theme to list)" >&2; exit 1; }
+name=$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["name"])' "$f")
+
+if [[ -d $wez_home/.config/wezterm ]]; then
+  printf '%s\n' "$name" > "$wez_home/.config/wezterm/theme"
+  [[ -f $wez_home/.wezterm.lua ]] && touch "$wez_home/.wezterm.lua"   # WezTerm reloads on change
+fi
+if [[ -d $HOME/.config/ghostty ]]; then
+  printf 'theme = omarchy-%s\n' "$slug" > "$HOME/.config/ghostty/theme.conf"
+fi
+if [[ -f $HOME/.claude/settings.json ]]; then
+  python3 - "$HOME/.claude/settings.json" "custom:omarchy-$slug" <<'EOF'
+import json, os, sys
+p, theme = sys.argv[1], sys.argv[2]
+d = json.load(open(p))
+d["theme"] = theme
+tmp = p + ".tmp"
+json.dump(d, open(tmp, "w"), indent=2)
+json.load(open(tmp))
+os.replace(tmp, p)
+EOF
+fi
+echo "-> $name (WezTerm reloads now; Ghostty on config reload; Claude on /theme or new session)"

@@ -1,0 +1,11 @@
+{{- if ne .chezmoi.os "windows" -}}
+#!/usr/bin/env bash
+# Add one line to the existing shell rc files so they load ~/.config/shell/common.sh.
+# The rc files themselves stay yours (distro defaults, local kubeconfigs, work CLIs).
+set -euo pipefail
+line='[ -f "$HOME/.config/shell/common.sh" ] && . "$HOME/.config/shell/common.sh"  # dotfiles'
+for rc in "$HOME/.bashrc" "$HOME/.zshrc"; do
+  [ -f "$rc" ] || continue
+  grep -qF '.config/shell/common.sh' "$rc" || printf '\n%s\n' "$line" >> "$rc"
+done
+{{- end }}
