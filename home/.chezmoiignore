@@ -1,0 +1,30 @@
+{{- /*
+  Which files land on which machine.
+  - Windows (native chezmoi): the terminal side only. WezTerm, its colours, .wslconfig.
+  - WSL: everything that runs inside Linux. WezTerm lives on the Windows side, so skip it here.
+  - macOS / Linux desktop: everything except .wslconfig.
+*/ -}}
+{{- $wsl := false -}}
+{{- if eq .chezmoi.os "linux" -}}
+{{-   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}
+{{-     $wsl = true -}}
+{{-   end -}}
+{{- end -}}
+
+{{ if ne .chezmoi.os "windows" }}
+.wslconfig
+{{ end }}
+
+{{ if eq .chezmoi.os "windows" }}
+.claude
+.config/ghostty
+.config/herdr
+.config/shell
+.local
+{{ end }}
+
+{{ if $wsl }}
+.wezterm.lua
+.config/wezterm
+.config/ghostty
+{{ end }}

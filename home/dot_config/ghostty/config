@@ -1,0 +1,19 @@
+# Ghostty (macOS / Linux desktop). Managed by chezmoi. Mirrors the WezTerm setup.
+# Ghostty bundles JetBrains Mono with Nerd Font symbols, so no font install is needed.
+
+# Theme: Omarchy themes in ./themes; `dots-theme <name>` writes the active one to theme.conf.
+theme = omarchy-dracula
+config-file = ?"~/.config/ghostty/theme.conf"
+
+font-size = 13
+
+# Omarchy look
+window-padding-x = 14
+window-padding-y = 14
+confirm-close-surface = false
+resize-overlay = never
+cursor-style = block
+cursor-style-blink = false
+
+# Send Shift+Enter as CSI-u so TUIs (Claude Code, herdr) can tell it from Enter.
+keybind = shift+enter=csi:13;2u

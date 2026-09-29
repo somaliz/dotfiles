@@ -1,0 +1,13 @@
+{{- if ne .chezmoi.os "windows" -}}
+#!/usr/bin/env bash
+# herdr: Claude Code integration (session restore after a server restart) and the plugins the
+# config binds keys to. Runs once per machine; rerun with `chezmoi state delete-bucket --bucket=scriptState`.
+set -uo pipefail
+export PATH="$HOME/.local/bin:$PATH"
+command -v herdr >/dev/null || { echo "herdr not installed, skipping (install: curl -fsSL https://herdr.dev/install.sh | sh)"; exit 0; }
+mkdir -p "$HOME/.claude"
+herdr integration install claude || echo "herdr: claude integration failed"
+for p in smarzban/herdr-file-viewer persiyanov/herdr-reviewr alexarthurs/herdr-sidebar/plugins/herdr-sidebar; do
+  herdr plugin install --yes "$p" || echo "herdr: plugin $p failed"
+done
+{{- end }}

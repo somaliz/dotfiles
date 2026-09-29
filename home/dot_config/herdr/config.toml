@@ -1,0 +1,81 @@
+# herdr config (managed by chezmoi), tuned for running several Claude Code sessions.
+# Keys verified against `herdr --default-config` (v0.9.1) and https://herdr.dev/docs/keyboard/ on 2026-09-29.
+# Reload a running server with: herdr server reload-config   (or prefix+shift+r)
+
+onboarding = false
+
+[theme]
+# Omarchy's herdr setup: follow the terminal's palette, so herdr matches whichever
+# Omarchy scheme the terminal is on (switch with: dots-theme <name>).
+name = "terminal"
+
+[theme.custom]
+# Active tab = panel_bg text on the accent colour, so panel_bg must be dark to read (Omarchy default).
+panel_bg = "black"
+
+[terminal]
+# New panes/tabs open in the directory of the pane you split from.
+new_cwd = "follow"
+# WezTerm and Ghostty show Kitty graphics. Set false on Windows Terminal.
+kitty_graphics = true
+
+[keys]
+# Claude Code owns ctrl+b (background a running task), so the prefix moves to ctrl+q, which Claude does not use.
+prefix = "ctrl+q"
+
+# Prefix-free chords from herdr's keyboard guide. Letters only: punctuation chords
+# collide with AltGr on the Italian/French layouts (Windows sends AltGr as ctrl+alt).
+focus_pane_left = ["prefix+h", "ctrl+alt+h"]
+focus_pane_down = ["prefix+j", "ctrl+alt+j"]
+focus_pane_up = ["prefix+k", "ctrl+alt+k"]
+focus_pane_right = ["prefix+l", "ctrl+alt+l"]
+previous_tab = ["prefix+p", "ctrl+alt+p"]
+next_tab = ["prefix+n", "ctrl+alt+n"]
+new_tab = ["prefix+c", "ctrl+alt+c"]
+split_vertical = ["prefix+v", "ctrl+alt+d"]
+split_horizontal = ["prefix+minus", "ctrl+alt+shift+d"]
+zoom = ["prefix+z", "ctrl+alt+z"]
+
+# Jump between Claude sessions, wherever they are.
+next_agent = ["prefix+a", "ctrl+alt+a"]
+previous_agent = "prefix+shift+a"
+focus_agent = "prefix+alt+1..9"
+
+# File viewer (smarzban/herdr-file-viewer): split or own tab.
+[[keys.command]]
+key = "prefix+f"
+type = "plugin_action"
+command = "herdr-file-viewer.open-file-viewer"
+description = "open file viewer in split"
+
+[[keys.command]]
+key = "prefix+shift+f"
+type = "plugin_action"
+command = "herdr-file-viewer.open-file-viewer-tab"
+description = "open file viewer in tab"
+
+# Code review pane (persiyanov/herdr-reviewr): read Claude's diff, send comments back.
+[[keys.command]]
+key = "prefix+shift+c"
+type = "plugin_action"
+command = "persiyanov.reviewr.open"
+description = "open code review pane"
+
+[ui]
+# Blocked agents first: the sidebar becomes an attention queue.
+agent_panel_sort = "priority"
+# Distinct glyphs per state, not just coloured dots.
+status_indicators = "symbols"
+show_agent_labels_on_pane_borders = true
+prompt_new_tab_name = false
+
+[ui.toast]
+# "terminal" = the terminal turns it into a desktop notification.
+delivery = "terminal"
+
+[session]
+resume_agents_on_restore = true
+
+[experimental]
+# Keep recent pane screens across a full server restart (e.g. after WSL dies).
+pane_history = true

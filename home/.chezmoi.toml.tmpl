@@ -1,0 +1,7 @@
+{{- /* Per-machine answers, asked once on `chezmoi init` and kept in ~/.config/chezmoi/chezmoi.toml (never committed). */ -}}
+{{- $wslDistro := "Ubuntu" -}}
+{{- if eq .chezmoi.os "windows" -}}
+{{-   $wslDistro = promptStringOnce . "wslDistro" "WSL distribution WezTerm should open" "Ubuntu" -}}
+{{- end -}}
+[data]
+    wslDistro = {{ $wslDistro | quote }}
