@@ -62,12 +62,24 @@ command = "persiyanov.reviewr.toggle"
 description = "toggle code review pane"
 
 [ui]
+# Wide enough for repo and worktree names (default 26/36 truncates them).
+sidebar_width = 34
+sidebar_max_width = 46
 # Blocked agents first: the sidebar becomes an attention queue.
 agent_panel_sort = "priority"
 # Distinct glyphs per state, not just coloured dots.
 status_indicators = "symbols"
 show_agent_labels_on_pane_borders = true
 prompt_new_tab_name = false
+
+# Spaces: a blank line between projects so each project and its worktrees read as one group.
+[ui.sidebar.spaces]
+row_gap = 1
+rows = [["state_icon", "workspace"], ["branch", "git_status"]]
+
+# Agents: for Claude, show what the session is doing (its terminal title) instead of the tab name.
+[ui.sidebar.agents.rows_by_agent]
+claude = [["state_icon", "workspace"], ["terminal_title_stripped"]]
 
 [ui.toast]
 # "terminal" = the terminal turns it into a desktop notification.
