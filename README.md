@@ -58,6 +58,7 @@ chezmoi update                                  # pull and apply on another mach
 herdr keys (prefix `ctrl+q`, since Claude Code uses `ctrl+b`): `ctrl+q ?` lists every binding.
 Split `ctrl+alt+d` / `ctrl+alt+shift+d`, move `ctrl+alt+h/j/k/l`, zoom `ctrl+alt+z`, new tab `ctrl+alt+c`,
 next agent `ctrl+alt+a`, file viewer `ctrl+q f`, code review `ctrl+q shift+c`, detach `ctrl+q q`.
+Sidebars: herdr spaces/agents `ctrl+q b`; file explorer + git `ctrl+q shift+b` or `ctrl+alt+b` (same key closes it).
 
 ## Adding another machine's setup
 

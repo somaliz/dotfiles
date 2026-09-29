@@ -61,6 +61,21 @@ type = "plugin_action"
 command = "persiyanov.reviewr.toggle"
 description = "toggle code review pane"
 
+# File explorer + git sidebar (alexarthurs/herdr-sidebar): one key opens it, the same key closes it.
+# Auto-open is off and strict toggle is on (set by chezmoi in the plugin's state), so it stays shut until asked.
+# herdr's own spaces/agents sidebar is ctrl+q b.
+[[keys.command]]
+key = "prefix+shift+b"
+type = "plugin_action"
+command = "herdr-sidebar.open-sidebar"
+description = "toggle file explorer sidebar"
+
+[[keys.command]]
+key = "ctrl+alt+b"
+type = "plugin_action"
+command = "herdr-sidebar.open-sidebar"
+description = "toggle file explorer sidebar"
+
 [ui]
 # Wide enough for repo and worktree names (default 26/36 truncates them).
 sidebar_width = 34

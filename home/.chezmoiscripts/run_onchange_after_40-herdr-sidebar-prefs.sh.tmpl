@@ -1,0 +1,20 @@
+{{- if ne .chezmoi.os "windows" -}}
+#!/usr/bin/env bash
+# herdr-sidebar plugin: open only on demand (ctrl+q shift+b / ctrl+alt+b) instead of re-docking on every
+# focus change, and make that key a real open/close toggle. Only these two keys are touched; the plugin
+# keeps every other preference you set in its own settings screen.
+set -euo pipefail
+f="${XDG_STATE_HOME:-$HOME/.local/state}/herdr/plugins/herdr-sidebar/state.json"
+mkdir -p "$(dirname "$f")"
+python3 - "$f" <<'PY'
+import json, os, sys
+p = sys.argv[1]
+d = json.load(open(p)) if os.path.exists(p) else {}
+d["auto_open"] = False
+d["strict_toggle"] = True
+tmp = p + ".tmp"
+json.dump(d, open(tmp, "w"), separators=(",", ":"))
+json.load(open(tmp))
+os.replace(tmp, p)
+PY
+{{- end }}
